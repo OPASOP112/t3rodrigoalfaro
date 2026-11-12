@@ -41,17 +41,20 @@ public class ElectroStoreService {
         Producto producto = obtenerProductoPorId(id);
         producto.setNombre(productoDetalles.getNombre());
         producto.setCategoria(productoDetalles.getCategoria());
-        producto.setPrecio(productoDetalles.getPrecio());
+        // CAMBIADO: Ahora actualiza ambos precios
+        producto.setPrecioCompra(productoDetalles.getPrecioCompra());
+        producto.setPrecioVenta(productoDetalles.getPrecioVenta());
         producto.setStock(productoDetalles.getStock());
         producto.setMarca(productoDetalles.getMarca());
         producto.setCodigoBarras(productoDetalles.getCodigoBarras());
+        // AGREGADO: Actualizar fecha de ingreso
+        producto.setFechaIngreso(productoDetalles.getFechaIngreso());
         return productoRepository.save(producto);
     }
 
     public void eliminarProducto(Long id) {
         productoRepository.deleteById(id);
     }
-
 
     public List<Producto> buscarPorPrecioMaximo(BigDecimal precioMax) {
         return productoRepository.buscarPorPrecioMaximoJPQL(precioMax);
@@ -61,7 +64,6 @@ public class ElectroStoreService {
         return productoRepository.findByCategoriaNamed(categoria);
     }
 
- 
     public Pedido crearPedido(PedidoRequestDTO request) {
         Pedido pedido = new Pedido();
         pedido.setCliente(request.getCliente());
@@ -81,13 +83,15 @@ public class ElectroStoreService {
             producto.setStock(producto.getStock() - item.getCantidad());
             productoRepository.save(producto);
 
-            BigDecimal subtotal = producto.getPrecio().multiply(BigDecimal.valueOf(item.getCantidad()));
+            // CAMBIADO: Se usa precioVenta para calcular el subtotal del cliente
+            BigDecimal subtotal = producto.getPrecioVenta().multiply(BigDecimal.valueOf(item.getCantidad()));
             montoTotalAcumulado = montoTotalAcumulado.add(subtotal);
 
             DetallePedido detalle = new DetallePedido();
             detalle.setProducto(producto);
             detalle.setCantidad(item.getCantidad());
-            detalle.setPrecioUnitario(producto.getPrecio());
+            // CAMBIADO: El precio unitario que se guarda en el detalle es el de venta
+            detalle.setPrecioUnitario(producto.getPrecioVenta());
             detalle.setSubtotal(subtotal);
 
             pedido.addDetalle(detalle);

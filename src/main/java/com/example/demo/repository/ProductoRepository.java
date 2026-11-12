@@ -12,7 +12,8 @@ import java.util.List;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
-    @Query("SELECT p FROM Producto p WHERE p.precio <= :precioMax ORDER BY p.precio DESC")
+    // CORREGIDO: Ahora usa precioVenta en lugar de precio
+    @Query("SELECT p FROM Producto p WHERE p.precioVenta <= :precioMax ORDER BY p.precioVenta DESC")
     List<Producto> buscarPorPrecioMaximoJPQL(@Param("precioMax") BigDecimal precioMax);
 
     List<Producto> findByCategoriaNamed(@Param("categoria") String categoria);

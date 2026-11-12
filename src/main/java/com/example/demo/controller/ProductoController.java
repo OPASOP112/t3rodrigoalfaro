@@ -33,10 +33,12 @@ public class ProductoController {
         Producto producto = new Producto();
         producto.setNombre(dto.getNombre());
         producto.setCategoria(dto.getCategoria());
-        producto.setPrecio(dto.getPrecio());
+        producto.setPrecioCompra(dto.getPrecioCompra()); // <-- MODIFICADO
+        producto.setPrecioVenta(dto.getPrecioVenta());   // <-- MODIFICADO
         producto.setStock(dto.getStock());
         producto.setMarca(dto.getMarca());
         producto.setCodigoBarras(dto.getCodigoBarras());
+        producto.setFechaIngreso(dto.getFechaIngreso()); // <-- AGREGADO
         
         return new ResponseEntity<>(service.guardarProducto(producto), HttpStatus.CREATED);
     }
@@ -46,10 +48,12 @@ public class ProductoController {
         Producto producto = new Producto();
         producto.setNombre(dto.getNombre());
         producto.setCategoria(dto.getCategoria());
-        producto.setPrecio(dto.getPrecio());
+        producto.setPrecioCompra(dto.getPrecioCompra()); // <-- MODIFICADO
+        producto.setPrecioVenta(dto.getPrecioVenta());   // <-- MODIFICADO
         producto.setStock(dto.getStock());
         producto.setMarca(dto.getMarca());
         producto.setCodigoBarras(dto.getCodigoBarras());
+        producto.setFechaIngreso(dto.getFechaIngreso()); // <-- AGREGADO
         
         return ResponseEntity.ok(service.actualizarProducto(id, producto));
     }
@@ -59,7 +63,6 @@ public class ProductoController {
         service.eliminarProducto(id);
         return ResponseEntity.noContent().build();
     }
-
 
     @GetMapping("/precio-max")
     public ResponseEntity<List<Producto>> listarPorPrecioMaximo(@RequestParam BigDecimal max) {
